@@ -1,21 +1,9 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
+# See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# 基于 `mcr.microsoft.com/dotnet/aspnet:5.0 AS base` 来构建镜像
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+# 设置工作目录,如不存在会被创建
 WORKDIR /app
-EXPOSE 80
-
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /src
-COPY ["Order.Api/Order.Api.csproj", "Order.Api/"]
-RUN dotnet restore "Order.Api/Order.Api.csproj"
-COPY . .
-WORKDIR "/src/Order.Api"
-RUN dotnet build "Order.Api.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "Order.Api.csproj" -c Release -o /app/publish
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Order.Api.dll"]
+# Copy release文件夹内容到工作目录app
+COPY . /app
+# 运行.dll
+ENTRYPOINT ["dotnet", "Order.Api.dll","--server.urls","http://*:8080"]

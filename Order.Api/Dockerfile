@@ -7,4 +7,3 @@ WORKDIR /app
 COPY . /app
 # ÔËÐÐ.dll
 ENTRYPOINT ["dotnet", "Order.Api.dll"]
-ENV ASPNETCORE_URLS=http://+:8080

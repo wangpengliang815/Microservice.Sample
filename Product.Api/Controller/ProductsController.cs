@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Order.Api.Controller
+namespace Product.Api.Controller
 {
     [Route("[Controller]")]
     [ApiController]

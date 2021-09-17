@@ -6,4 +6,5 @@ WORKDIR /app
 # Copy release文件夹内容到工作目录app
 COPY . /app
 # 运行.dll
-ENTRYPOINT ["dotnet", "Order.Api.dll","--server.urls","http://*:8080"]
+ENTRYPOINT ["dotnet", "Order.Api.dll"]
+ENV ASPNETCORE_URLS=http://+:8080

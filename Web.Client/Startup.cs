@@ -28,7 +28,7 @@ namespace Web.Client
             services.AddControllersWithViews();
 
 
-            services.AddSingleton<IServiceHelper, ServiceHelper>();
+            services.AddSingleton<IServiceHelper, GatewayServiceHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,9 +54,6 @@ namespace Web.Client
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            //程序启动时 获取服务列表
-            serviceHelper.GetServices();
         }
     }
 }

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.Api", "Order.Api\Order.Api.csproj", "{140B4999-12B5-4A8C-A430-92A17EE1FA49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Client", "Web.Client\Web.Client.csproj", "{3FCD1118-3C98-4704-9BB8-9416D25A9E07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Client", "Web.Client\Web.Client.csproj", "{3FCD1118-3C98-4704-9BB8-9416D25A9E07}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ocelot.Geteway", "Ocelot.Geteway\Ocelot.Geteway.csproj", "{731FDD0D-58DA-49C8-A59F-7D678F01A108}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3FCD1118-3C98-4704-9BB8-9416D25A9E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FCD1118-3C98-4704-9BB8-9416D25A9E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FCD1118-3C98-4704-9BB8-9416D25A9E07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{731FDD0D-58DA-49C8-A59F-7D678F01A108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{731FDD0D-58DA-49C8-A59F-7D678F01A108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{731FDD0D-58DA-49C8-A59F-7D678F01A108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{731FDD0D-58DA-49C8-A59F-7D678F01A108}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

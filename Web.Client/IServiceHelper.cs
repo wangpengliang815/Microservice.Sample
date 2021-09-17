@@ -13,21 +13,8 @@ namespace Web.Client
 {
     public interface IServiceHelper
     {
-        /// <summary>
-        /// 获取产品数据
-        /// </summary>
-        /// <returns></returns>
-        Task<string> GetProduct();
-
-        /// <summary>
-        /// 获取订单数据
-        /// </summary>
-        /// <returns></returns>
         Task<string> GetOrder();
 
-        /// <summary>
-        /// 获取服务列表
-        /// </summary>
         void GetServices();
     }
 
@@ -36,14 +23,14 @@ namespace Web.Client
         private readonly IConfiguration configuration;
         private readonly ConsulClient consulClient;
         private ConcurrentBag<string> orderServiceUrls;
-        private ConcurrentBag<string> productServiceUrls;
 
         public ServiceHelper(IConfiguration configuration)
         {
             this.configuration = configuration;
-            consulClient = new ConsulClient(c =>
+            this.consulClient = new ConsulClient(c =>
             {
-                c.Address = new Uri(this.configuration["ConsulSetting:ConsulAddress"]);
+                // consul地址
+                c.Address = new Uri(configuration["ConsulSetting:ConsulAddress"]);
             });
         }
 
@@ -52,7 +39,6 @@ namespace Web.Client
             if (orderServiceUrls == null)
                 return await Task.FromResult("【订单服务】正在初始化服务列表...");
 
-            //每次随机访问一个服务实例
             var Client = new RestClient(orderServiceUrls.ElementAt(new Random().Next(0, orderServiceUrls.Count())));
             var request = new RestRequest("/orders", Method.GET);
 
@@ -60,27 +46,14 @@ namespace Web.Client
             return response.Content;
         }
 
-        public async Task<string> GetProduct()
-        {
-            if (productServiceUrls == null)
-                return await Task.FromResult("【产品服务】正在初始化服务列表...");
-
-            //每次随机访问一个服务实例
-            var Client = new RestClient(productServiceUrls.ElementAt(new Random().Next(0, productServiceUrls.Count())));
-            var request = new RestRequest("/products", Method.GET);
-
-            var response = await Client.ExecuteAsync(request);
-            return response.Content;
-        }
-
         public void GetServices()
         {
-            var serviceNames = new string[] { "order.service", "product.service" };
+            var serviceNames = new string[] { "order.service" };
             Array.ForEach(serviceNames, p =>
             {
                 Task.Run(() =>
                 {
-                    //WaitTime默认为5分钟
+                    // WaitTime默认为5分钟
                     var queryOptions = new QueryOptions { WaitTime = TimeSpan.FromMinutes(10) };
                     while (true)
                     {
@@ -89,15 +62,14 @@ namespace Web.Client
                 });
             });
         }
-
         private void GetServices(QueryOptions queryOptions, string serviceName)
         {
             var res = consulClient.Health.Service(serviceName, null, true, queryOptions).Result;
 
-            //控制台打印一下获取服务列表的响应时间等信息
+            // 获取服务列表的响应时间等信息
             Console.WriteLine($"{DateTime.Now}获取{serviceName}：queryOptions.WaitIndex：{queryOptions.WaitIndex}  LastIndex：{res.LastIndex}");
 
-            //版本号不一致 说明服务列表发生了变化
+            // 版本号不一致 说明服务列表发生变化
             if (queryOptions.WaitIndex != res.LastIndex)
             {
                 queryOptions.WaitIndex = res.LastIndex;
@@ -107,8 +79,6 @@ namespace Web.Client
 
                 if (serviceName == "order.service")
                     orderServiceUrls = new ConcurrentBag<string>(serviceUrls);
-                else if (serviceName == "ProductService")
-                    productServiceUrls = new ConcurrentBag<string>(serviceUrls);
             }
         }
     }

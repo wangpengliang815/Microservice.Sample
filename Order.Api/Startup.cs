@@ -30,13 +30,9 @@ namespace Order.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
-            {
-
-            }
+            { }
             else
-            {
-
-            }
+            { }
 
             app.UseStaticFiles();
 

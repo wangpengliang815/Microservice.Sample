@@ -30,7 +30,6 @@ namespace Web.Client.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             ViewBag.OrderData = await serviceHelper.GetOrder();
-            ViewBag.ProductData = await serviceHelper.GetProduct();
             return View();
         }
 

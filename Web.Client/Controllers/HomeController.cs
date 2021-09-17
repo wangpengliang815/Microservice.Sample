@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Consul;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using RestSharp;
@@ -42,34 +45,5 @@ namespace Web.Client.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-    public interface IServiceHelper
-    {
-        Task<string> GetProduct();
-
-        Task<string> GetOrder();
-    }
-
-    public class ServiceHelper : IServiceHelper
-    {
-        public async Task<string> GetOrder()
-        {
-            string[] serviceUrls = { "http://192.168.134.191:80", "http://192.168.134.191:81", "http://192.168.134.191:82" };
-
-            //每次随机访问一个服务实例
-            var Client = new RestClient(serviceUrls[new Random().Next(0, 3)]);
-
-            var request = new RestRequest("/orders", Method.GET);
-            var response = await Client.ExecuteAsync(request);
-            return response.Content;
-        }
-
-        public async Task<string> GetProduct()
-        {
-            string serviceUrl = "http://192.168.134.191:90";
-            var Client = new RestClient(serviceUrl);
-            var request = new RestRequest("/products", Method.GET);
-            var response = await Client.ExecuteAsync(request);
-            return response.Content;
-        }
-    }
+  
 }

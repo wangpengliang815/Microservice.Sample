@@ -11,7 +11,7 @@ namespace Order.Api.Controller
     {
         private readonly IConfiguration configuration;
 
-        OrdersController(IConfiguration configuration)
+        public OrdersController(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
@@ -19,14 +19,8 @@ namespace Order.Api.Controller
         [HttpGet]
         public IActionResult Index()
         {
-            string result = $"订单服务：{DateTime.Now:yyyy-MM-dd HH:mm:ss},-{Request.HttpContext.Connection.LocalIpAddress}:{configuration["ConsulSetting:ServicePort"]}";
+            string result = $"订单服务：{DateTime.Now:yyyy-MM-dd HH:mm:ss},-{Request.HttpContext.Connection.LocalIpAddress}:{Request.HttpContext.Connection.LocalPort}";
             return Ok(result);
-        }
-
-        [HttpGet]
-        public IActionResult HealthCheck()
-        {
-            return Ok();
         }
     }
 }

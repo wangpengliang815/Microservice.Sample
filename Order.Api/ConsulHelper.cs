@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
+using Newtonsoft.Json;
+
 using System;
 
 namespace Order.Api
@@ -23,7 +25,7 @@ namespace Order.Api
                 c.Address = new Uri(configuration["ConsulSetting:ConsulAddress"]);
             });
 
-            var registration = new AgentServiceRegistration()
+            var registration = new AgentServiceRegistration
             {
                 // 服务实例唯一标识
                 ID = Guid.NewGuid().ToString(),
@@ -45,6 +47,8 @@ namespace Order.Api
                     Timeout = TimeSpan.FromSeconds(5)
                 }
             };
+
+            Console.WriteLine($"=>{JsonConvert.SerializeObject(registration)}");
 
             //服务注册
             consulClient.Agent.ServiceRegister(registration).Wait();

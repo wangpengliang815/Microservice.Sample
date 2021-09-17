@@ -32,7 +32,7 @@ namespace Web.Client
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceHelper serviceHelper)
         {
             if (env.IsDevelopment())
             {
@@ -54,6 +54,9 @@ namespace Web.Client
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //程序启动时 获取服务列表
+            serviceHelper.GetServices();
         }
     }
 }

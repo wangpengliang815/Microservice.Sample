@@ -26,7 +26,7 @@ namespace Order.Api
             {
                 x.UseEntityFramework<OrderContext>().UseRabbitMQ(option =>
                 {
-                    option.HostName = "192.168.201.191";
+                    option.HostName = "http://rabbitmq";
                     option.UserName = "guest";
                     option.Password = "guest";
                 });
@@ -46,7 +46,7 @@ namespace Order.Api
             });
 
             // ЗўЮёзЂВс
-            //app.RegisterConsul(Configuration, lifetime);
+            app.RegisterConsul(Configuration, lifetime);
         }
     }
 }

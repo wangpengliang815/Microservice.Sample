@@ -1,0 +1,118 @@
+version: '3.4'
+services:
+    apigateway: 
+        image: gateway
+        build: 
+            context: .
+            dockerfile: ./geteway.release/Dockerfile
+        ports: 
+            - '8080:8080'
+        environment: 
+            - ASPNETCORE_URLS=http://+:8080
+        networks:
+            - my-net
+        depends_on: 
+            - orderapi1
+            - orderapi2
+            - orderapi3
+            - productapi1
+            - productapi2
+            - productapi3
+
+    orderapi1:
+        image: order.api
+        build: 
+            context: .
+            dockerfile: ./order.api.release/Dockerfile
+        ports: 
+            - '80:80'
+        environment: 
+            - ASPNETCORE_URLS=http://+:80
+            - ConsulSetting:ServiceIP=orderapi1
+            - ConsulSetting:ServicePort=80
+        networks: 
+            - my-net
+        depends_on: 
+            - consul
+            - rabbitmq
+    orderapi2:
+        image: order.api
+        ports: 
+            - '81:81'
+        environment: 
+            - ASPNETCORE_URLS=http://+:81
+            - ConsulSetting:ServiceIP=orderapi2
+            - ConsulSetting:ServicePort=81
+        networks: 
+            - my-net
+        depends_on: 
+            - orderapi1
+    orderapi3:
+        image: order.api
+        ports: 
+            - '83:83'
+        environment: 
+            - ASPNETCORE_URLS=http://+:83
+            - ConsulSetting:ServiceIP=orderapi3
+            - ConsulSetting:ServicePort=83
+        networks: 
+            - my-net
+        depends_on: 
+            - orderapi1
+
+    productapi1: 
+        image: product.api 
+        build: 
+            context: .
+            dockerfile: ./product.api.release/Dockerfile
+        ports: 
+            - '85:85'
+        environment: 
+            - ASPNETCORE_URLS=http://+:85
+            - ConsulSetting:ServiceIP=productapi1 
+            - ConsulSetting:ServicePort=85
+        networks: 
+            - my-net
+        depends_on: 
+            - consul
+            - rabbitmq
+    productapi2:
+        image: product.api
+        ports: 
+            - '86:86'
+        environment: 
+            - ASPNETCORE_URLS=http://+:86
+            - ConsulSetting:ServiceIP=productapi2
+            - ConsulSetting:ServicePort=86
+        networks: 
+            - my-net
+        depends_on: 
+            - productapi1
+    productapi3:
+        image: product.api
+        ports: 
+            - '87:87'
+        environment: 
+            - ASPNETCORE_URLS=http://+:87
+            - ConsulSetting:ServiceIP=productapi3 
+            - ConsulSetting:ServicePort=87
+        networks: 
+            - my-net
+        depends_on: 
+            - productapi1
+
+    consul:
+        image: consul
+        ports: 
+            - '8500:8500'
+        networks: 
+            - my-net
+
+    rabbitmq:
+        image: rabbitmq
+        networks: 
+            - my-net
+
+networks: 
+    my-net: 
+        driver: bridge

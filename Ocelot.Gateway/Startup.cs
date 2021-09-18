@@ -10,7 +10,7 @@ using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
 using Ocelot.Provider.Polly;
 
-namespace Ocelot.Geteway
+namespace Ocelot.Gateway
 {
     public class Startup
     {

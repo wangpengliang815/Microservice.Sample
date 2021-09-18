@@ -27,24 +27,16 @@ namespace Product.Api
             {
                 x.UseEntityFramework<ProductContext>().UseRabbitMQ(option =>
                 {
-                    option.HostName = "192.168.201.191";
+                    option.HostName = "http://rabbitmq";
                     option.UserName = "guest";
                     option.Password = "guest";
                 });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
-            if (env.IsDevelopment())
-            {
-
-            }
-            else
-            {
-
-            }
+            if (env.IsDevelopment()) { } else { }
 
             app.UseStaticFiles();
 
@@ -53,6 +45,9 @@ namespace Product.Api
             {
                 endpoints.MapControllers();
             });
+
+            // ЗўЮёзЂВс
+            app.RegisterConsul(Configuration, lifetime);
         }
     }
 }

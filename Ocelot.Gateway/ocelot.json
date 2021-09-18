@@ -1,0 +1,79 @@
+{
+  "Routes": [
+    {
+      // 路由规则匹配
+      "DownstreamPathTemplate": "/orders/{url}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/orders/{url}",
+      // 增加Post请求
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "ServiceName": "order.service",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+      // 缓存
+      "FileCacheOptions": {
+        "TtlSeconds": 5,
+        "Region": "regionname"
+      },
+      // 限流
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "SuperClient" ],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 2,
+        "Limit": 1
+      },
+      // 超时熔断
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 10000,
+        "TimeoutValue": 5000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/products",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/products",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "product.service",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+      // 缓存
+      "FileCacheOptions": {
+        "TtlSeconds": 5,
+        "Region": "regionname"
+      },
+      // 限流
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "SuperClient" ],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 2,
+        "Limit": 1
+      },
+      // 超时熔断
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 10000,
+        "TimeoutValue": 5000
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000",
+    "ServiceDiscoveryProvider": {
+      "Scheme": "http",
+      "Host": "192.168.31.191",
+      "Port": 8500,
+      "Type": "Consul"
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "too many requests...",
+      "HttpStatusCode": 999,
+      "ClientIdHeader": "Test"
+    }
+  }
+}

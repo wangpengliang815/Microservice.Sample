@@ -8,6 +8,25 @@
       "ServiceName": "order.service",
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
+      },
+      // »º´æ
+      "FileCacheOptions": {
+        "TtlSeconds": 5,
+        "Region": "regionname"
+      },
+      // ÏÞÁ÷
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "SuperClient" ],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 2,
+        "Limit": 1
+      },
+      // ³¬Ê±ÈÛ¶Ï
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 10000,
+        "TimeoutValue": 5000
       }
     }
   ],
@@ -15,9 +34,15 @@
     "BaseUrl": "http://localhost:8000",
     "ServiceDiscoveryProvider": {
       "Scheme": "http",
-      "Host": "192.168.31.191",
+      "Host": "192.168.201.191",
       "Port": 8500,
       "Type": "Consul"
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "too many requests...",
+      "HttpStatusCode": 999,
+      "ClientIdHeader": "Test"
     }
   }
 }

@@ -20,10 +20,10 @@ namespace Order.Api
             , IConfiguration configuration
             , IHostApplicationLifetime lifetime)
         {
-            var consulClient = new ConsulClient(c =>
+            // consul地址
+            var consulClient = new ConsulClient(p =>
             {
-                // consul地址
-                c.Address = new Uri(configuration["ConsulSetting:ConsulAddress"]);
+                p.Address = new Uri(configuration["ConsulSetting:ConsulAddress"]);
             });
 
             var registration = new AgentServiceRegistration()
@@ -36,6 +36,7 @@ namespace Order.Api
                 Address = configuration["ConsulSetting:ServiceIP"],
                 // 服务端口：因为要运行多个实例，端口不能在appsettings.json里配置而是在docker容器运行时传入
                 Port = int.Parse(configuration["ConsulSetting:ServicePort"]),
+                // 健康检查
                 Check = new AgentServiceCheck()
                 {
                     // 服务启动多久后注册

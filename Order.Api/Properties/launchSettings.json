@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Order.Api.Dev": {
+    "Order.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

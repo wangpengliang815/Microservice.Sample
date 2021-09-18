@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Order.Api
 {
@@ -18,6 +19,18 @@ namespace Order.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<OrderContext>(opt => opt.UseSqlServer(Configuration["ConnectionString"]));
+
+            services.AddCap(x =>
+            {
+                x.UseEntityFramework<OrderContext>().UseRabbitMQ(option =>
+                {
+                    option.HostName = "192.168.201.191";
+                    option.UserName = "guest";
+                    option.Password = "guest";
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
@@ -33,7 +46,7 @@ namespace Order.Api
             });
 
             // ЗўЮёзЂВс
-            app.RegisterConsul(Configuration, lifetime);
+            //app.RegisterConsul(Configuration, lifetime);
         }
     }
 }

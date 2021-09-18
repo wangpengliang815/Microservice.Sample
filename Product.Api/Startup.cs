@@ -3,11 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Product.Api
 {
@@ -24,6 +20,18 @@ namespace Product.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<ProductContext>(opt => opt.UseSqlServer(Configuration["ConnectionString"]));
+
+            services.AddCap(x =>
+            {
+                x.UseEntityFramework<ProductContext>().UseRabbitMQ(option =>
+                {
+                    option.HostName = "192.168.201.191";
+                    option.UserName = "guest";
+                    option.Password = "guest";
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

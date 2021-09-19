@@ -7,7 +7,7 @@ namespace Order.Api.Controller
     public class HealthCheckController : ControllerBase
     {
         /// <summary>
-        /// 健康检查接口
+        /// 健康检查
         /// </summary>
         /// <returns></returns>
         [HttpGet]

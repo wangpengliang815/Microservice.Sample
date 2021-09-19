@@ -45,7 +45,6 @@ namespace Product.Api.Controller
         public async Task ReduceStock(CreateOrderMessageDto message)
         {
             Console.WriteLine("message:" + JsonConvert.SerializeObject(message));
-            //业务代码
             var product = await context.Products.FirstOrDefaultAsync(p => p.ID == message.ProductID);
             product.Stock -= message.Count;
             await context.SaveChangesAsync();

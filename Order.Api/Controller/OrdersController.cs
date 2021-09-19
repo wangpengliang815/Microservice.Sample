@@ -41,23 +41,21 @@ namespace Order.Api.Controller
         [HttpPost]
         public async Task<IActionResult> CreateOrder(Models.Order order)
         {
-            using (var trans = context.Database.BeginTransaction(capBus, autoCommit: true))
+            using var trans = context.Database.BeginTransaction(capBus, autoCommit: true);
+            //业务代码
+            order.CreateTime = DateTime.Now;
+            context.Orders.Add(order);
+
+            var result = await context.SaveChangesAsync() > 0;
+
+            if (result)
             {
-                //业务代码
-                order.CreateTime = DateTime.Now;
-                context.Orders.Add(order);
-
-                var result = await context.SaveChangesAsync() > 0;
-
-                if (result)
-                {
-                    // 发布下单事件
-                    await capBus.PublishAsync("order.services.createorder",
-                        new CreateOrderMessageDto() { Count = order.Count, ProductID = order.ProductID });
-                    return Ok();
-                }
-                return BadRequest();
+                // 发布下单事件
+                await capBus.PublishAsync("order.services.createorder",
+                    new CreateOrderMessageDto() { Count = order.Count, ProductID = order.ProductID });
+                return Ok();
             }
+            return BadRequest();
         }
     }
 }

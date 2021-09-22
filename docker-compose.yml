@@ -2,6 +2,7 @@ version: '3.4'
 services:
     apigateway: 
         image: gateway
+        container_name: gateway
         build: 
             context: .
             dockerfile: ./geteway.release/Dockerfile
@@ -103,13 +104,14 @@ services:
 
     consul:
         image: consul
+        container_name: consul
         ports: 
             - '8500:8500'
         networks: 
             - my-net
 
     rabbitmq:
-        image: rabbitmq
+        image: rabbitmq:3.9.5-management
         networks: 
             - my-net
 

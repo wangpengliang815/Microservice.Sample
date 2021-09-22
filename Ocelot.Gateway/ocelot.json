@@ -65,7 +65,7 @@
     "BaseUrl": "http://localhost:5000",
     "ServiceDiscoveryProvider": {
       "Scheme": "http",
-      "Host": "192.168.31.191",
+      "Host": "192.168.102.191",
       "Port": 8500,
       "Type": "Consul"
     },

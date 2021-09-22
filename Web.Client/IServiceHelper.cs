@@ -15,6 +15,8 @@ namespace Web.Client
     {
         Task<string> GetOrder();
 
+        Task<string> GetProduct();
+
         void GetServices();
     }
 
@@ -23,6 +25,7 @@ namespace Web.Client
         private readonly IConfiguration configuration;
         private readonly ConsulClient consulClient;
         private ConcurrentBag<string> orderServiceUrls;
+        private ConcurrentBag<string> productServiceUrls;
 
         public ServiceHelper(IConfiguration configuration)
         {
@@ -46,9 +49,21 @@ namespace Web.Client
             return response.Content;
         }
 
+        public async Task<string> GetProduct()
+        {
+            if (productServiceUrls == null)
+                return await Task.FromResult("【产品服务】正在初始化服务列表...");
+
+            var Client = new RestClient(orderServiceUrls.ElementAt(new Random().Next(0, orderServiceUrls.Count())));
+            var request = new RestRequest("/products", Method.GET);
+
+            var response = await Client.ExecuteAsync(request);
+            return response.Content;
+        }
+
         public void GetServices()
         {
-            var serviceNames = new string[] { "order.service" };
+            var serviceNames = new string[] { "order.service", "product.service" };
             Array.ForEach(serviceNames, p =>
             {
                 Task.Run(() =>
@@ -62,6 +77,7 @@ namespace Web.Client
                 });
             });
         }
+
         private void GetServices(QueryOptions queryOptions, string serviceName)
         {
             var res = consulClient.Health.Service(serviceName, null, true, queryOptions).Result;
@@ -79,6 +95,8 @@ namespace Web.Client
 
                 if (serviceName == "order.service")
                     orderServiceUrls = new ConcurrentBag<string>(serviceUrls);
+                if (serviceName == "product.service")
+                    productServiceUrls = new ConcurrentBag<string>(serviceUrls);
             }
         }
     }

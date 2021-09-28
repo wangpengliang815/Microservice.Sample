@@ -18,10 +18,17 @@ namespace Order.Api.Controller
         private readonly ICapPublisher capBus;
         private readonly OrderContext context;
 
+#if cap
         public OrdersController(IConfiguration configuration, ICapPublisher capBus, OrderContext context)
         {
             this.configuration = configuration;
             this.capBus = capBus;
+            this.context = context;
+        }
+#else
+        public OrdersController(IConfiguration configuration, OrderContext context)
+        {
+            this.configuration = configuration;
             this.context = context;
         }
 
@@ -32,11 +39,7 @@ namespace Order.Api.Controller
             return Ok(result);
         }
 
-        /// <summary>
-        /// 创建订单
-        /// </summary>
-        /// <param name="order"></param>
-        /// <returns></returns>
+#if cap
         [Route("Create")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder(Models.Order order)
@@ -57,5 +60,7 @@ namespace Order.Api.Controller
             }
             return BadRequest();
         }
+#endif
     }
 }
+#endif

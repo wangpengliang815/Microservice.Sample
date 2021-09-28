@@ -21,10 +21,17 @@ namespace Product.Api.Controller
         private readonly ICapPublisher capBus;
         private readonly ProductContext context;
 
+#if cap
         public ProductsController(IConfiguration configuration, ICapPublisher capBus, ProductContext context)
         {
             this.configuration = configuration;
             this.capBus = capBus;
+            this.context = context;
+        }
+#else
+        public ProductsController(IConfiguration configuration, ProductContext context)
+        {
+            this.configuration = configuration;
             this.context = context;
         }
 
@@ -35,11 +42,7 @@ namespace Product.Api.Controller
             return Ok(result);
         }
 
-        /// <summary>
-        /// 减库存 订阅下单事件
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
+#if cap
         [NonAction]
         [CapSubscribe("order.services.createorder")]
         public async Task ReduceStock(CreateOrderMessageDto message)
@@ -49,5 +52,7 @@ namespace Product.Api.Controller
             product.Stock -= message.Count;
             await context.SaveChangesAsync();
         }
+#endif
     }
+#endif
 }

@@ -22,6 +22,7 @@ namespace Product.Api
 
             services.AddDbContext<ProductContext>(opt => opt.UseSqlServer(Configuration["ConnectionString"]));
 
+#if cap
             services.AddCap(x =>
             {
                 x.UseEntityFramework<ProductContext>().UseRabbitMQ(option =>
@@ -30,7 +31,8 @@ namespace Product.Api
                     option.UserName = "guest";
                     option.Password = "guest";
                 });
-            });
+            
+#endif
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
@@ -44,9 +46,6 @@ namespace Product.Api
             {
                 endpoints.MapControllers();
             });
-
-            // ЗўЮёзЂВс
-            app.RegisterConsul(Configuration, lifetime);
         }
     }
 }

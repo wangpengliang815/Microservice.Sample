@@ -22,6 +22,7 @@ namespace Order.Api
 
             services.AddDbContext<OrderContext>(opt => opt.UseSqlServer(Configuration["ConnectionString"]));
 
+#if cap
             services.AddCap(x =>
             {
                 x.UseEntityFramework<OrderContext>().UseRabbitMQ(option =>
@@ -31,6 +32,7 @@ namespace Order.Api
                     option.Password = "guest";
                 });
             });
+#endif
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
@@ -44,9 +46,6 @@ namespace Order.Api
             {
                 endpoints.MapControllers();
             });
-
-            // ЗўЮёзЂВс
-            app.RegisterConsul(Configuration, lifetime);
         }
     }
 }
